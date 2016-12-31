@@ -1,9 +1,9 @@
-class Client {
+public class Client {
     private var encoder: Encoder
     private var formatter: Formatter
     private var transport: Transport
 
-    init(encoder: Encoder, formatter: Formatter, transport: Transport) {
+    public init(encoder: Encoder, formatter: Formatter, transport: Transport) {
         self.encoder = encoder
         self.formatter = formatter
         self.transport = transport

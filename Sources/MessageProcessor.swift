@@ -1,8 +1,8 @@
-class MessageProcessor {
+public class MessageProcessor {
     private var encoder: Encoder
     private var formatter: Formatter
 
-    init(encoder: Encoder, formatter: Formatter) {
+    public init(encoder: Encoder, formatter: Formatter) {
         self.encoder = encoder
         self.formatter = formatter
     }

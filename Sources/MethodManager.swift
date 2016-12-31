@@ -1,4 +1,4 @@
-class MethodManager: MessageProcessor {
+public class MethodManager: MessageProcessor {
     private var resolvers = [Resolver]()
 
     override func add(resolver: Resolver) {

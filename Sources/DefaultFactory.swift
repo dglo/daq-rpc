@@ -1,14 +1,14 @@
-class DefaultFactory
+public class DefaultFactory
 {
-    class var encoder: Encoder {
+    public class var encoder: Encoder {
         return MsgPackEncoder()
     }
 
-    class var formatter: Formatter {
+    public class var formatter: Formatter {
         return JSONRPCFormatter()
     }
 
-    class func transport(msgproc: MessageProcessor) -> Transport {
+    public class func transport(msgproc: MessageProcessor) -> Transport {
         return SocketTransport(msgproc: msgproc)
     }
 }

@@ -1,4 +1,4 @@
-class MethodCall {
+public class MethodCall {
     static let UNKNOWN = MethodCall(id: 0 as Any, name: "UNKNOWN",
                                     params: [Any?]())
 

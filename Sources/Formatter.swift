@@ -1,4 +1,4 @@
-protocol Formatter {
+public protocol Formatter {
     func extractRequest(_ msg: Any?) throws -> MethodCall
     func extractResult(_ msg: Any) throws -> Any?
     func formatError(request: MethodCall, error: String) throws -> Any

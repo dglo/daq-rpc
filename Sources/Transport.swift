@@ -1,6 +1,6 @@
 import Foundation
 
-protocol Transport {
+public protocol Transport {
     var modeString: String { get}
     var isServer: Bool { get }
     func getNextConnection(addr: inout sockaddr,
