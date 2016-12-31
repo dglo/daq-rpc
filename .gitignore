@@ -1,0 +1,9 @@
+/.build
+/Packages
+/*.xcodeproj
+
+.hg
+.hgignore
+
+.DS_Store
+
