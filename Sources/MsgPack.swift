@@ -87,8 +87,8 @@ struct DataByteGenerator {
 }
 
 // pack strings
-extension Data {
-    mutating func pack(_ obj: Any?) throws -> Data {
+public extension Data {
+    public mutating func pack(_ obj: Any?) throws -> Data {
         if let nonnil = obj {
             let _ = try pack(nonnil)
         } else {
@@ -99,7 +99,7 @@ extension Data {
         return self
     }
 
-    mutating func pack(_ any: Any) throws -> Data {
+    public mutating func pack(_ any: Any) throws -> Data {
         if let str = any as? String {
             return try self.pack(str)
         } else if let u8 = any as? UInt8 {
@@ -126,6 +126,8 @@ extension Data {
             return try self.pack(int)
         } else if let uint = any as? UInt {
             return try self.pack(uint)
+        } else if let char = any as? Character {
+            return try self.pack(char)
         } else if let bool = any as? Bool {
             return try self.pack(bool)
         } else if let array = any as? [Any?] {
@@ -139,49 +141,49 @@ extension Data {
         } else if let map = any as? [AnyHashable: Any] {
             return try self.pack(map)
         } else {
-            throw MsgPackError.UnsupportedValue(any)
+            throw MsgPackError.UnsupportedValue("Unknown(\(any))")
         }
     }
 
-    mutating func pack(_ bool: Bool) throws -> Data {
+    public mutating func pack(_ bool: Bool) throws -> Data {
         var type: UInt8 = UInt8(bool ? 0xc3 : 0xc2)
         self.append(UnsafeBufferPointer(start: &type, count: 1))
         return self
     }
 
-    mutating func pack(_ uint8: UInt8) throws -> Data {
+    public mutating func pack(_ uint8: UInt8) throws -> Data {
         return try pack(Int(uint8))
     }
 
-    mutating func pack(_ int8: Int8) throws -> Data {
+    public mutating func pack(_ int8: Int8) throws -> Data {
         return try pack(Int(int8))
     }
 
-    mutating func pack(_ uint16: UInt16) throws -> Data {
+    public mutating func pack(_ uint16: UInt16) throws -> Data {
         return try pack(Int(uint16))
     }
 
-    mutating func pack(_ int16: Int16) throws -> Data {
+    public mutating func pack(_ int16: Int16) throws -> Data {
         return try pack(Int(int16))
     }
 
-    mutating func pack(_ uint32: UInt32) throws -> Data {
+    public mutating func pack(_ uint32: UInt32) throws -> Data {
         return try pack(Int(uint32))
     }
 
-    mutating func pack(_ int32: Int32) throws -> Data {
+    public mutating func pack(_ int32: Int32) throws -> Data {
         return try pack(Int(int32))
     }
 
-    mutating func pack(_ uint64: UInt64) throws -> Data {
+    public mutating func pack(_ uint64: UInt64) throws -> Data {
         return try pack(UInt(uint64))
     }
 
-    mutating func pack(_ int64: Int64) throws -> Data {
+    public mutating func pack(_ int64: Int64) throws -> Data {
         return try pack(Int(int64))
     }
 
-    mutating func pack(_ uint: UInt) throws -> Data {
+    public mutating func pack(_ uint: UInt) throws -> Data {
         if uint >= UInt(Int64.max) + 1 && uint <= UInt(UInt64.max) {
             // uint64
             var type = UInt8(0xcf)
@@ -195,7 +197,7 @@ extension Data {
         return try pack(Int(uint))
     }
 
-    mutating func pack(_ int: Int) throws -> Data {
+    public mutating func pack(_ int: Int) throws -> Data {
         switch int {
         case (Int(UInt32.max) + 1)...Int(Int64.max):
             // positive int64
@@ -266,13 +268,13 @@ extension Data {
             var value = UInt64(bitPattern: Int64(int)).bigEndian
             self.append(UnsafeBufferPointer(start: &value, count: 1))
         default:
-            throw MsgPackError.UnsupportedValue(int)
+            throw MsgPackError.UnsupportedValue("Int(\(int))")
         }
 
         return self
     }
 
-    mutating func pack(_ flt: Float) throws -> Data {
+    public mutating func pack(_ flt: Float) throws -> Data {
         var type = UInt8(0xca)
         self.append(UnsafeBufferPointer(start: &type, count: 1))
         var value = flt.bitPattern.bigEndian
@@ -280,7 +282,7 @@ extension Data {
         return self
     }
 
-    mutating func pack(_ dbl: Double) throws -> Data {
+    public mutating func pack(_ dbl: Double) throws -> Data {
         var type = UInt8(0xcb)
         self.append(UnsafeBufferPointer(start: &type, count: 1))
         //var value = CFConvertDoubleHostToSwapped(dbl)
@@ -289,7 +291,7 @@ extension Data {
         return self
     }
 
-    mutating func pack(_ str: String) throws -> Data {
+    public mutating func pack(_ str: String) throws -> Data {
         if str.isEmpty {
             var type: UInt8 = 0xa0
             self.append(UnsafeBufferPointer(start: &type, count: 1))
@@ -330,7 +332,7 @@ extension Data {
         return self
     }
 
-    mutating func pack(_ data: Data) throws -> Data {
+    public mutating func pack(_ data: Data) throws -> Data {
         if data.count < Int(UInt8.max) {
             var type: UInt8 = 0xc4
             self.append(UnsafeBufferPointer(start: &type, count: 1))
@@ -354,7 +356,7 @@ extension Data {
         return self
     }
 
-    mutating func pack(_ array: [Any?]) throws -> Data {
+    public mutating func pack(_ array: [Any?]) throws -> Data {
         if array.count < 16 {
             var type: UInt8 = UInt8(0x90 + array.count)
             self.append(UnsafeBufferPointer(start: &type, count: 1))
@@ -380,7 +382,7 @@ extension Data {
         return self
     }
 
-    mutating func pack(_ dict: [AnyHashable: Any?]) throws -> Data {
+    public mutating func pack(_ dict: [AnyHashable: Any?]) throws -> Data {
         if dict.count < 16 {
             var type: UInt8 = UInt8(0x80 + dict.count)
             self.append(UnsafeBufferPointer(start: &type, count: 1))
@@ -408,7 +410,7 @@ extension Data {
     }
 }
 
-extension Data {
+public extension Data {
     public func unpack() throws -> Any? {
         var generator = DataByteGenerator(data: self)
         return try self.unpack(generator: &generator)
@@ -420,7 +422,7 @@ extension Data {
         let data = try generator.nextData(length: length)
         guard let str = String(data: data,
                                encoding: String.Encoding.utf8) else {
-            throw MsgPackError.UnsupportedValue(data)
+            throw MsgPackError.UnsupportedValue("String(\(data))")
         }
 
         return str
@@ -602,7 +604,8 @@ extension Data {
             return try unpackMap(generator: &generator, length: len)
 
         default:
-            throw MsgPackError.UnsupportedValue(String(format: "%02x", type))
+            throw MsgPackError.UnsupportedValue(String(format: "Type(%02x)",
+                                                       type))
         }
     }
 }

@@ -1065,7 +1065,7 @@ class MsgPackTests: XCTestCase {
 
     func testShortBinary() {
         let bytes: [UInt8] = [0xc4, 0x4, 0x12, 0x34, 0x56, 0x78]
-        checkData(source: Data(bytes[2..<bytes.count]), bytes: bytes)
+        checkData(source: Data(bytes: bytes[2..<bytes.count]), bytes: bytes)
     }
 
     func testMediumBinary() {
@@ -1079,7 +1079,7 @@ class MsgPackTests: XCTestCase {
         for _ in 0..<len {
             bytes.append(0x78)
         }
-        checkData(source: Data(bytes[3..<bytes.count]), bytes: bytes)
+        checkData(source: Data(bytes: bytes[3..<bytes.count]), bytes: bytes)
     }
 
     func testLongBinary() {
@@ -1195,7 +1195,8 @@ class MsgPackTests: XCTestCase {
                     return false
                 }
             } else {
-                XCTFail("Source \(source) target \(target) is not Double")
+                let badType: Any.Type = type(of: target)
+                XCTFail("Target \(target) is \(badType) not Double(\(source))")
                 return false
             }
         } else if let sflt = source as? Float {
@@ -1205,7 +1206,8 @@ class MsgPackTests: XCTestCase {
                     return false
                 }
             } else {
-                XCTFail("Source \(source) target \(target) is not Float")
+                let badType: Any.Type = type(of: target)
+                XCTFail("Target \(target) is \(badType) not Float(\(source))")
                 return false
             }
         } else if let sint = source as? Int {
@@ -1225,7 +1227,8 @@ class MsgPackTests: XCTestCase {
                     return false
                 }
             } else {
-                XCTFail("Source \(source) target \(target) is not Bool")
+                let badType: Any.Type = type(of: target)
+                XCTFail("Target \(target) is \(badType) not Bool(\(source))")
                 return false
             }
         } else if let sarray = source as? [Any?] {
@@ -1236,7 +1239,8 @@ class MsgPackTests: XCTestCase {
                     return false
                 }
             } else {
-                XCTFail("Source \(source) target \(target) is not Array")
+                let badType: Any.Type = type(of: target)
+                XCTFail("Target \(target) is \(badType) not Array(\(source))")
                 return false
             }
 /*
@@ -1252,7 +1256,8 @@ class MsgPackTests: XCTestCase {
                     return false
                 }
             } else {
-                XCTFail("Source \(source) target \(target) is not String")
+                let badType: Any.Type = type(of: target)
+                XCTFail("Target \(target) is \(badType) not String(\(source))")
                 return false
             }
         } else {
@@ -1503,8 +1508,11 @@ class MsgPackTests: XCTestCase {
     }
 
     func testSmallMap() {
-        let smallMap: [AnyHashable: Any] = ["a": 1, "bb": 2.22222,
-                                            "ccc": "three"]
+        let smallMap: [AnyHashable: Any] = ["a": 1,
+                                            "bb": 2.22222,
+                                            "ccc": "three",
+                                            "dddd": Character("a"),
+        ]
 
         checkMap(source: smallMap,
                  elements: [
@@ -1513,6 +1521,7 @@ class MsgPackTests: XCTestCase {
                              0x47, 0x84, 0x23, 0x10],
                             [0xa3, 0x63, 0x63, 0x63, 0xa5, 0x74, 0x68, 0x72,
                              0x65, 0x65],
+                            [0xa4, 0x64, 0x64, 0x64, 0x64, 0xa1, 0x61],
                             ])
     }
 
@@ -1626,6 +1635,9 @@ class MsgPackTests: XCTestCase {
             ("testMediumArray", testMediumArray),
             ("testLongArray", testLongArray),
             ("testSmallMap", testSmallMap),
+            ("testIntDict", testIntDict),
+            ("testStringDict", testStringDict),
+            ("testStringMixedDict", testStringMixedDict),
         ]
     }
 }
