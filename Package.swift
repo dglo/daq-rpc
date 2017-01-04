@@ -3,6 +3,6 @@ import PackageDescription
 let package = Package(
     name: "daq-rpc",
     dependencies: [
-      .Package(url: "../i3msgpack", majorVersion: 1)
+      .Package(url: "git@github.com:dglo/i3msgpack.git", majorVersion: 0)
     ]
 )
