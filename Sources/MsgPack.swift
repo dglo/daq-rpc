@@ -127,7 +127,7 @@ public extension Data {
         } else if let uint = any as? UInt {
             return try self.pack(uint)
         } else if let char = any as? Character {
-            return try self.pack(char)
+            return try self.pack(String(char))
         } else if let bool = any as? Bool {
             return try self.pack(bool)
         } else if let array = any as? [Any?] {
