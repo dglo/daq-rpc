@@ -1,4 +1,5 @@
 import Foundation
+import i3msgpack
 
 class MsgPackEncoder: Encoder {
     func decode(_ rawbytes: [UInt8]) throws -> Any? {
