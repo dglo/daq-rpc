@@ -9,11 +9,11 @@ public class Client {
         self.transport = transport
     }
 
-    func close() {
+    public func close() {
         transport.stop()
     }
 
-    func execute(_ methodName: String,
+    public func execute(_ methodName: String,
                  params: [Any?]) throws -> Any? {
         let req = try formatter.formatRequest(methodName, params: params)
 
@@ -29,7 +29,7 @@ public class Client {
         return try formatter.extractResult(nonnil)
     }
 
-    func start(host: String, port: UInt16) throws {
+    public func start(host: String, port: UInt16) throws {
         try transport.startClient(host: host, port: port)
     }
 }
