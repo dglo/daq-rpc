@@ -1,5 +1,7 @@
 import Foundation
 
+import daq_common
+
 class IDFactory {
     private static var nextID = 1
     private static var mutex = Mutex()
